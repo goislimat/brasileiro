@@ -1,27 +1,62 @@
-# Laravel PHP Framework
+# Instruções para Funcionamento
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+### Para ter esse sistema funcionando em seu computador, siga as instruções a seguir
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+Abra o seu terminal ou git bash antes mesmo de conectar na máquina virtual
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+Acesse a pasta Code
 
-## Official Documentation
+Dentro dela, rode o comando
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+    git clone git@github.com:goislimat/brasileiro.git
 
-## Contributing
+Abra seu arquiv de hosts e adicione a linha:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+    192.168.10.10   brasileiro.app
 
-## Security Vulnerabilities
+Acesse seu arquivo ~/.homestead/Homestead.yaml e adicione a linha
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+    - map: brasileiro.app
+       to: /home/vagrant/Code/Brasileiro/public
+       
+Dentro da pasta ~/Homestead rode:
+    
+    vagrant provision && vagrant ssh
+    
+Espere a sua máquina virtual iniciar. Quando ela tiver finalizado a inicialização, crie o banco de dados. Para isso digite no terminal, quando já estiver conectado na sua VM:
 
-## License
+    mysql -u root -p
+    
+Digite a senha do seu banco de dados e então:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+    create database brasileiro;
+
+Saia do console do mysql com o exit.
+
+Acesse a pasta da aplicação:
+
+    cd ~/Code/Brasileiro
+    
+Agora, você precisa atualizar sua aplicação para baixar as pastas que não fazem parte do controle de versão. Faça isso com:
+
+    composer update
+    
+Feito isso, copie o arquivo .env.example e o renomeie para .env
+
+Troque o nome do banco de dados para brasileiro:
+
+    DB_DATABASE=brasileiro
+    
+Gere uma key para a sua aplicação com:
+
+    php artisan key:generate
+    
+Execute as migrações:
+
+    php artisan migrate
+    
+Semeie o banco de dados:
+
+    php artisan db:seed
+    
+Processo finalizado. Basta acessar a aplicação no seu browser.
